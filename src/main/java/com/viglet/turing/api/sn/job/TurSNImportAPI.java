@@ -11,26 +11,36 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.viglet.turing.persistence.model.sn.TurSNSite;
+import com.viglet.turing.persistence.repository.sn.TurSNSiteRepository;
+
 import io.swagger.annotations.Api;
 
 @RestController
-@RequestMapping("/api/sn/{id}/import")
+@RequestMapping("/api/sn/{siteName}/import")
 @Api(tags = "Semantic Navigation Import", description = "Semantic Navigation Import API")
 public class TurSNImportAPI {
 	static final Logger logger = LogManager.getLogger(TurSNImportAPI.class.getName());
 	@Autowired
 	private JmsMessagingTemplate jmsMessagingTemplate;
+	@Autowired
+	private TurSNSiteRepository turSNSiteRepository;
 
 	public static final String INDEXING_QUEUE = "indexing.queue";
 
 	@PostMapping
-	public String turSNImportBroker(@PathVariable String id, @RequestBody TurSNJobItems turSNJobItems)
+	public boolean turSNImportBroker(@PathVariable String siteName, @RequestBody TurSNJobItems turSNJobItems)
 			throws JSONException {
-		TurSNJob turSNJob = new TurSNJob();
-		turSNJob.setSiteId(id);
-		turSNJob.setTurSNJobItems(turSNJobItems);
-		send(turSNJob);
-		return "Ok";
+		TurSNSite turSNSite = turSNSiteRepository.findByName(siteName);
+		if (turSNSite != null) {
+			TurSNJob turSNJob = new TurSNJob();
+			turSNJob.setSiteId(turSNSite.getId());
+			turSNJob.setTurSNJobItems(turSNJobItems);
+			send(turSNJob);
+			return true;
+		} else {
+			return false;
+		}
 
 	}
 
