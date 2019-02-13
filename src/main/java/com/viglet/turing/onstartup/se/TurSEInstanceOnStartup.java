@@ -44,7 +44,7 @@ public class TurSEInstanceOnStartup {
 				
 				turConfigVar.setId("DEFAULT_SE");
 				turConfigVar.setPath("/se");
-				turConfigVar.setValue(Integer.toString(turSEInstance.getId()));
+				turConfigVar.setValue(turSEInstance.getId());
 				turConfigVarRepository.save(turConfigVar);
 			}
 		}

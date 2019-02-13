@@ -42,15 +42,15 @@ public class TurSNSiteFieldAPI {
 
 	@ApiOperation(value = "Show a Semantic Navigation Site Field")
 	@GetMapping("/{id}")
-	public TurSNSiteField turSNSiteFieldGet(@PathVariable String snSiteId, @PathVariable int id) throws JSONException {
-		return this.turSNSiteFieldRepository.findById(id);
+	public TurSNSiteField turSNSiteFieldGet(@PathVariable String snSiteId, @PathVariable String id) throws JSONException {
+		return this.turSNSiteFieldRepository.findById(id).get();
 	}
 
 	@ApiOperation(value = "Update a Semantic Navigation Site Field")
 	@PutMapping("/{id}")
-	public TurSNSiteField turSNSiteFieldUpdate(@PathVariable String snSiteId, @PathVariable int id,
+	public TurSNSiteField turSNSiteFieldUpdate(@PathVariable String snSiteId, @PathVariable String id,
 			@RequestBody TurSNSiteField turSNSiteField) throws Exception {
-		TurSNSiteField turSNSiteFieldEdit = this.turSNSiteFieldRepository.findById(id);
+		TurSNSiteField turSNSiteFieldEdit = this.turSNSiteFieldRepository.findById(id).get();
 		turSNSiteFieldEdit.setDescription(turSNSiteField.getDescription());
 		turSNSiteFieldEdit.setMultiValued(turSNSiteField.getMultiValued());
 		turSNSiteFieldEdit.setName(turSNSiteField.getName());
@@ -62,7 +62,7 @@ public class TurSNSiteFieldAPI {
 	@Transactional
 	@ApiOperation(value = "Delete a Semantic Navigation Site Field")
 	@DeleteMapping("/{id}")
-	public boolean turSNSiteFieldDelete(@PathVariable String snSiteId, @PathVariable int id) {
+	public boolean turSNSiteFieldDelete(@PathVariable String snSiteId, @PathVariable String id) {
 		this.turSNSiteFieldRepository.delete(id);
 		return true;
 	}

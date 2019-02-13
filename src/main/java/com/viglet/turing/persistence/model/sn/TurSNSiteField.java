@@ -3,9 +3,9 @@ package com.viglet.turing.persistence.model.sn;
 import java.io.Serializable;
 import javax.persistence.*;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.viglet.turing.persistence.model.nlp.TurNLPInstance;
-import com.viglet.turing.persistence.model.se.TurSEInstance;
 import com.viglet.turing.se.field.TurSEFieldType;
 
 /**
@@ -19,9 +19,10 @@ public class TurSNSiteField implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(unique = true, nullable = false)
-	private int id;
+	@GenericGenerator(name = "UUID", strategy = "com.viglet.turing.jpa.TurUUIDGenerator")
+	@GeneratedValue(generator = "UUID")
+	@Column(name = "id", updatable = false, nullable = false)
+	private String id;
 
 	@Column(nullable = false, length = 50)
 	private String name;
@@ -41,11 +42,11 @@ public class TurSNSiteField implements Serializable {
 	@JsonBackReference (value="turSNSiteField-turSNSite")
 	private TurSNSite turSNSite;
 
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

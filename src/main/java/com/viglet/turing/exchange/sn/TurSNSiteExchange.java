@@ -47,9 +47,9 @@ public class TurSNSiteExchange {
 
 	private String defaultURLField;
 
-	private int turSEInstance;
+	private String turSEInstance;
 
-	private int turNLPInstance;
+	private String turNLPInstance;
 
 	private Set<TurSNSiteField> turSNSiteFields;
 
@@ -238,19 +238,19 @@ public class TurSNSiteExchange {
 		this.defaultURLField = defaultURLField;
 	}
 
-	public int getTurSEInstance() {
+	public String getTurSEInstance() {
 		return turSEInstance;
 	}
 
-	public void setTurSEInstance(int turSEInstance) {
+	public void setTurSEInstance(String turSEInstance) {
 		this.turSEInstance = turSEInstance;
 	}
 
-	public int getTurNLPInstance() {
+	public String getTurNLPInstance() {
 		return turNLPInstance;
 	}
 
-	public void setTurNLPInstance(int turNLPInstance) {
+	public void setTurNLPInstance(String turNLPInstance) {
 		this.turNLPInstance = turNLPInstance;
 	}
 

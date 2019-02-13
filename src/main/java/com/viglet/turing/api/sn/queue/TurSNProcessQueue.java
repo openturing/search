@@ -89,7 +89,7 @@ public class TurSNProcessQueue {
 
 		// NLP
 		boolean nlp = true;
-		if (turSNSite.getTurNLPInstance() != null && turSNSite.getTurNLPInstance().getId() >= 1) {
+		if (turSNSite.getTurNLPInstance() != null) {
 			logger.debug("It is using NLP to process attributes");
 			nlp = true;
 		} else {

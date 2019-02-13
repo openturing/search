@@ -38,15 +38,15 @@ public class TurSEInstanceAPI {
 
 	@ApiOperation(value = "Show a Search Engine")
 	@GetMapping("/{id}")
-	public TurSEInstance turSEInstanceGet(@PathVariable int id) throws JSONException {
-		return this.turSEInstanceRepository.findById(id);
+	public TurSEInstance turSEInstanceGet(@PathVariable String id) throws JSONException {
+		return this.turSEInstanceRepository.findById(id).get();
 	}
 
 	@ApiOperation(value = "Update a Search Engine")
 	@PutMapping("/{id}")
-	public TurSEInstance turSEInstanceUpdate(@PathVariable int id, @RequestBody TurSEInstance turSEInstance)
+	public TurSEInstance turSEInstanceUpdate(@PathVariable String id, @RequestBody TurSEInstance turSEInstance)
 			throws Exception {
-		TurSEInstance turSEInstanceEdit = turSEInstanceRepository.findById(id);
+		TurSEInstance turSEInstanceEdit = turSEInstanceRepository.findById(id).get();
 		turSEInstanceEdit.setTitle(turSEInstance.getTitle());
 		turSEInstanceEdit.setDescription(turSEInstance.getDescription());
 		turSEInstanceEdit.setTurSEVendor(turSEInstance.getTurSEVendor());
@@ -60,7 +60,7 @@ public class TurSEInstanceAPI {
 	@Transactional
 	@ApiOperation(value = "Delete a Search Engine")
 	@DeleteMapping("/{id}")
-	public boolean turSEInstanceDelete(@PathVariable int id) throws Exception {
+	public boolean turSEInstanceDelete(@PathVariable String id) throws Exception {
 		this.turSEInstanceRepository.delete(id);
 		return true;
 	}

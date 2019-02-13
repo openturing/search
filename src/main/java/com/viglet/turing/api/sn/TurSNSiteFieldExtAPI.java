@@ -66,9 +66,9 @@ public class TurSNSiteFieldExtAPI {
 				.findByTurNLPInstanceAndEnabled(turSNSite.getTurNLPInstance(), 1);
 		List<TurNLPEntity> turNLPEntityThesaurus = turNLPEntityRepository.findByLocal(1);
 
-		Map<Integer, TurSNSiteField> fieldMap = new HashMap<Integer, TurSNSiteField>();
-		Map<Integer, TurNLPEntity> nerMap = new HashMap<Integer, TurNLPEntity>();
-		Map<Integer, TurNLPEntity> thesaurusMap = new HashMap<Integer, TurNLPEntity>();
+		Map<String, TurSNSiteField> fieldMap = new HashMap<String, TurSNSiteField>();
+		Map<String, TurNLPEntity> nerMap = new HashMap<String, TurNLPEntity>();
+		Map<String, TurNLPEntity> thesaurusMap = new HashMap<String, TurNLPEntity>();
 
 		for (TurSNSiteField turSNSiteField : turSNSiteFields) {
 			fieldMap.put(turSNSiteField.getId(), turSNSiteField);
@@ -169,16 +169,16 @@ public class TurSNSiteFieldExtAPI {
 
 	@ApiOperation(value = "Show a Semantic Navigation Site Field Ext")
 	@GetMapping("/{id}")
-	public TurSNSiteFieldExt turSNSiteFieldExtGet(@PathVariable String snSiteId, @PathVariable int id)
+	public TurSNSiteFieldExt turSNSiteFieldExtGet(@PathVariable String snSiteId, @PathVariable String id)
 			throws JSONException {
-		return this.turSNSiteFieldExtRepository.findById(id);
+		return this.turSNSiteFieldExtRepository.findById(id).get();
 	}
 
 	@ApiOperation(value = "Update a Semantic Navigation Site Field Ext")
 	@PutMapping("/{id}")
-	public TurSNSiteFieldExt turSNSiteFieldExtUpdate(@PathVariable String snSiteId, @PathVariable int id,
+	public TurSNSiteFieldExt turSNSiteFieldExtUpdate(@PathVariable String snSiteId, @PathVariable String id,
 			@RequestBody TurSNSiteFieldExt turSNSiteFieldExt) throws Exception {
-		TurSNSiteFieldExt turSNSiteFieldExtEdit = this.turSNSiteFieldExtRepository.findById(id);
+		TurSNSiteFieldExt turSNSiteFieldExtEdit = this.turSNSiteFieldExtRepository.findById(id).get();
 		turSNSiteFieldExtEdit.setFacetName(turSNSiteFieldExt.getFacetName());
 		turSNSiteFieldExtEdit.setMultiValued(turSNSiteFieldExt.getMultiValued());
 		turSNSiteFieldExtEdit.setName(turSNSiteFieldExt.getName());
@@ -203,8 +203,8 @@ public class TurSNSiteFieldExtAPI {
 	@Transactional
 	@ApiOperation(value = "Delete a Semantic Navigation Site Field Ext")
 	@DeleteMapping("/{id}")
-	public boolean turSNSiteFieldExtDelete(@PathVariable String snSiteId, @PathVariable int id) {
-		TurSNSiteFieldExt turSNSiteFieldExtEdit = this.turSNSiteFieldExtRepository.findById(id);
+	public boolean turSNSiteFieldExtDelete(@PathVariable String snSiteId, @PathVariable String id) {
+		TurSNSiteFieldExt turSNSiteFieldExtEdit = this.turSNSiteFieldExtRepository.findById(id).get();
 
 		switch (turSNSiteFieldExtEdit.getSnType()) {
 		case SE:
@@ -248,7 +248,7 @@ public class TurSNSiteFieldExtAPI {
 	public void updateExternalField(TurSNSiteFieldExt turSNSiteFieldExt) {
 		switch (turSNSiteFieldExt.getSnType()) {
 		case SE:
-			TurSNSiteField turSNSiteField = turSNSiteFieldRepository.findById(turSNSiteFieldExt.getExternalId());
+			TurSNSiteField turSNSiteField = turSNSiteFieldRepository.findById(turSNSiteFieldExt.getExternalId()).get();
 			turSNSiteField.setDescription(turSNSiteFieldExt.getDescription());
 			turSNSiteField.setMultiValued(turSNSiteFieldExt.getMultiValued());
 			turSNSiteField.setName(turSNSiteFieldExt.getName());
@@ -258,7 +258,7 @@ public class TurSNSiteFieldExtAPI {
 			break;
 
 		case NER:
-			TurNLPEntity turNLPEntityNER = turNLPEntityRepository.findById(turSNSiteFieldExt.getExternalId());
+			TurNLPEntity turNLPEntityNER = turNLPEntityRepository.findById(turSNSiteFieldExt.getExternalId()).get();
 			turNLPEntityNER.setDescription(turSNSiteFieldExt.getDescription());
 			turNLPEntityNER.setInternalName(turSNSiteFieldExt.getName());
 			this.turNLPEntityRepository.save(turNLPEntityNER);
@@ -266,7 +266,7 @@ public class TurSNSiteFieldExtAPI {
 			break;
 
 		case THESAURUS:
-			TurNLPEntity turNLPEntityThesaurus = turNLPEntityRepository.findById(turSNSiteFieldExt.getExternalId());
+			TurNLPEntity turNLPEntityThesaurus = turNLPEntityRepository.findById(turSNSiteFieldExt.getExternalId()).get();
 			turNLPEntityThesaurus.setDescription(turSNSiteFieldExt.getDescription());
 			turNLPEntityThesaurus.setInternalName(turSNSiteFieldExt.getName());
 			this.turNLPEntityRepository.save(turNLPEntityThesaurus);

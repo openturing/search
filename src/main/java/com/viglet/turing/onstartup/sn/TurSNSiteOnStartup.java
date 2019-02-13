@@ -47,8 +47,8 @@ public class TurSNSiteOnStartup {
 			turSNSite.setLanguage(TurLocaleRepository.EN_US);
 			turSNSite.setCore("turing");
 
-			turSNSite.setTurNLPInstance(turNLPInstanceRepository.findById(1));
-			turSNSite.setTurSEInstance(turSEInstanceRepository.findById(1));
+			turSNSite.setTurNLPInstance(turNLPInstanceRepository.findAll().get(0));
+			turSNSite.setTurSEInstance(turSEInstanceRepository.findAll().get(0));
 
 			// UI
 			turSNSite.setRowsPerPage(10);
