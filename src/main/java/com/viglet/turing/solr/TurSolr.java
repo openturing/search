@@ -507,31 +507,31 @@ public class TurSolr {
 		filterQueryArr = fq.toArray(filterQueryArr);
 		query.setFilterQueries(filterQueryArr);
 
-		// Target Rule
+		// Targeting Rule
 		if (tr != null && tr.size() > 0) {
-			List<String> emptyTargetRules = new ArrayList<String>();
-			StringBuilder targetRuleQuery = new StringBuilder();
-			targetRuleQuery.append("(");
-			String targetRuleOR = "";
+			List<String> emptyTargetingRules = new ArrayList<String>();
+			StringBuilder targetingRuleQuery = new StringBuilder();
+			targetingRuleQuery.append("(");
+			String targetingRuleOR = "";
 			for (String trItem : tr) {
-				targetRuleQuery.append(targetRuleOR).append(trItem);
-				targetRuleOR = " OR ";
-				String[] targetRuleParts = trItem.split(":");
-				if (targetRuleParts.length == 2 && !emptyTargetRules.contains(targetRuleParts[0])) {
-					emptyTargetRules.add(targetRuleParts[0]);
+				targetingRuleQuery.append(targetingRuleOR).append(trItem);
+				targetingRuleOR = " OR ";
+				String[] targetingRuleParts = trItem.split(":");
+				if (targetingRuleParts.length == 2 && !emptyTargetingRules.contains(targetingRuleParts[0])) {
+					emptyTargetingRules.add(targetingRuleParts[0]);
 				}
 			}
-			targetRuleQuery.append(")");
+			targetingRuleQuery.append(")");
 
-			if (emptyTargetRules.size() > 0) {
-				for (String emptyTargetRule : emptyTargetRules) {
-					targetRuleQuery.append(String.format(" OR (*:* NOT %s:*)", emptyTargetRule));
+			if (emptyTargetingRules.size() > 0) {
+				for (String emptyTargetRule : emptyTargetingRules) {
+					targetingRuleQuery.append(String.format(" OR (*:* NOT %s:*)", emptyTargetRule));
 				}
 			}
 			// Sample: "(groups:Group1 OR groups:Group2) OR (*:* NOT groups:*)");
-			query.addFilterQuery(targetRuleQuery.toString());
+			query.addFilterQuery(targetingRuleQuery.toString());
 		}
-		
+
 		// System.out.println("Solr Query:" + query.toString());
 		QueryResponse queryResponse;
 		try {
