@@ -307,31 +307,23 @@ public class TurSolr {
 
 			for (Map.Entry<String, Object> entry : attributes.entrySet()) {
 				String key = entry.getKey();
-				Object attribute = entry.getValue();				
+				Object attribute = entry.getValue();
 				if (attribute != null) {
-					logger.info("key: " + key);
-					logger.info("attribute: " + attribute.toString());
-					logger.info("class: " + attribute.getClass().getName());
 					if (turSNSiteFieldMap.get(key) != null) {
-						logger.info("multivalue: " + turSNSiteFieldMap.get(key).getMultiValued());
 					}
 					if (attribute.getClass().getName().equals("java.lang.Integer")) {
-						logger.info("is Integer");
 						int intValue = (Integer) attribute;
 						document.addField(key, intValue);
 					} else if (attribute.getClass().getName().equals("org.json.JSONArray")) {
-						logger.info("is JSONArray");
 						JSONArray value = (JSONArray) attribute;
 						if (key.startsWith("turing_entity_") || (turSNSiteFieldMap.get(key) != null
 								&& turSNSiteFieldMap.get(key).getMultiValued() == 1)) {
-							logger.info("is MultiValued");
 							if (value != null) {
 								for (int i = 0; i < value.length(); i++) {
 									document.addField(key, value.getString(i));
 								}
 							}
 						} else {
-							logger.info("is not MultiValued");
 							ArrayList<String> listValues = new ArrayList<String>();
 							if (value != null) {
 								for (int i = 0; i < value.length(); i++) {
@@ -341,22 +333,18 @@ public class TurSolr {
 							document.addField(key, concatenateString(listValues));
 						}
 					} else if (attribute instanceof ArrayList) {
-						logger.info("is ArrayList");
 						ArrayList values = (ArrayList) attribute;
 						if (values != null) {
 							if (key.startsWith("turing_entity_") || (turSNSiteFieldMap.get(key) != null
 									&& turSNSiteFieldMap.get(key).getMultiValued() == 1)) {
-								logger.info("is MultiValued");
 								for (Object valueItem : values) {
 									document.addField(key, turSolrField.convertFieldToString(valueItem));
 								}
 							} else {
-								logger.info("is not MultiValued");
 								document.addField(key, concatenateString(values));
 							}
 						}
 					} else {
-						logger.info("is undefined");
 						String valueStr = turSolrField.convertFieldToString(attribute);
 						document.addField(key, valueStr);
 					}
@@ -404,8 +392,8 @@ public class TurSolr {
 		return null;
 	}
 
-	public TurSEResults retrieveSolr(String txtQuery, List<String> fq, int currentPage, String sort, int rows)
-			throws SolrServerException, NumberFormatException, JSONException {
+	public TurSEResults retrieveSolr(String txtQuery, List<String> fq, List<String> tr, int currentPage, String sort,
+			int rows) throws SolrServerException, NumberFormatException, JSONException {
 		List<TurSNSiteFieldExt> turSNSiteFieldExts = turSNSiteFieldExtRepository.findByTurSNSiteAndEnabled(turSNSite,
 				1);
 
@@ -514,11 +502,36 @@ public class TurSolr {
 			query.set(MoreLikeThisParams.SIMILARITY_FIELDS, mltFields.toString());
 		}
 
+		// Filter Query
 		String[] filterQueryArr = new String[fq.size()];
 		filterQueryArr = fq.toArray(filterQueryArr);
-
 		query.setFilterQueries(filterQueryArr);
 
+		// Target Rule
+		if (tr != null && tr.size() > 0) {
+			List<String> emptyTargetRules = new ArrayList<String>();
+			StringBuilder targetRuleQuery = new StringBuilder();
+			targetRuleQuery.append("(");
+			String targetRuleOR = "";
+			for (String trItem : tr) {
+				targetRuleQuery.append(targetRuleOR).append(trItem);
+				targetRuleOR = " OR ";
+				String[] targetRuleParts = trItem.split(":");
+				if (targetRuleParts.length == 2 && !emptyTargetRules.contains(targetRuleParts[0])) {
+					emptyTargetRules.add(targetRuleParts[0]);
+				}
+			}
+			targetRuleQuery.append(")");
+
+			if (emptyTargetRules.size() > 0) {
+				for (String emptyTargetRule : emptyTargetRules) {
+					targetRuleQuery.append(String.format(" OR (*:* NOT %s:*)", emptyTargetRule));
+				}
+			}
+			// Sample: "(groups:Group1 OR groups:Group2) OR (*:* NOT groups:*)");
+			query.addFilterQuery(targetRuleQuery.toString());
+		}
+		
 		// System.out.println("Solr Query:" + query.toString());
 		QueryResponse queryResponse;
 		try {

@@ -160,6 +160,7 @@ public class TurSNSiteSearchAPI {
 			@RequestParam(required = false, name = "q") String q,
 			@RequestParam(required = false, name = "p") Integer currentPage,
 			@RequestParam(required = false, name = "fq[]") List<String> fq,
+			@RequestParam(required = false, name = "tr[]") List<String> tr,
 			@RequestParam(required = false, name = "sort") String sort,
 			@RequestParam(required = false, name = "rows") Integer rows, HttpServletRequest request)
 			throws JSONException {
@@ -218,8 +219,28 @@ public class TurSNSiteSearchAPI {
 
 			}
 		}
+		
 		String[] filterQueryModifiedArr = new String[filterQueryModified.size()];
 		filterQueryModifiedArr = filterQueryModified.toArray(filterQueryModifiedArr);
+		
+		List<String> targetRuleModified = new ArrayList<String>();
+		if (tr != null) {
+			for (String targetRule : tr) {
+				String[] targetRuleParts = targetRule.split(":");
+				if (targetRuleParts.length == 2) {	
+					if (!targetRuleParts[1].startsWith("\"") && !targetRuleParts[1].startsWith("[")) {
+						targetRuleParts[1] = "\"" + targetRuleParts[1] + "\"";
+						targetRuleModified.add(targetRuleParts[0] + ":" + targetRuleParts[1]);
+					}
+				} else {
+					targetRuleModified.add(targetRule);
+				}
+
+			}
+		}
+		
+		String[] targetRuleModifiedArr = new String[targetRuleModified.size()];
+		targetRuleModifiedArr = targetRuleModified.toArray(targetRuleModifiedArr);
 
 		Map<String, TurSNSiteFieldExt> facetMap = new HashMap<String, TurSNSiteFieldExt>();
 
@@ -239,7 +260,7 @@ public class TurSNSiteSearchAPI {
 		turSolr.init(turSNSite);
 		try {
 
-			turSEResults = turSolr.retrieveSolr(q, filterQueryModified, currentPage.intValue(), sort, rows.intValue());
+			turSEResults = turSolr.retrieveSolr(q, filterQueryModified, targetRuleModified, currentPage.intValue(), sort, rows.intValue());
 			if (turSEResults != null) {
 				List<TurSEResult> seResults = turSEResults.getResults();
 				// System.out.println("getResults size:" + turSEResults.getResults().size());

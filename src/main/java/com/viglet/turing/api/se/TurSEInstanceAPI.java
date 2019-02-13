@@ -77,6 +77,7 @@ public class TurSEInstanceAPI {
 	public String turSEInstanceSelect(@RequestParam(required = false, name = "q") String q,
 			@RequestParam(required = false, name = "p") Integer currentPage,
 			@RequestParam(required = false, name = "fq[]") List<String> fq,
+			@RequestParam(required = false, name = "tr[]") List<String> tr,
 			@RequestParam(required = false, name = "sort") String sort,
 			@RequestParam(required = false, name = "rows") Integer rows) throws JSONException {
 
@@ -89,7 +90,7 @@ public class TurSEInstanceAPI {
 		String result = null;
 		TurSolr turSolr = new TurSolr();
 		try {
-			result = turSolr.retrieveSolr(q, fq, currentPage, sort, rows).toString();
+			result = turSolr.retrieveSolr(q, fq, tr, currentPage, sort, rows).toString();
 
 		} catch (Exception e) {
 			e.printStackTrace();
