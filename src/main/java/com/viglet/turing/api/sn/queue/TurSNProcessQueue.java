@@ -10,6 +10,7 @@ import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.mortbay.log.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
@@ -144,7 +145,10 @@ public class TurSNProcessQueue {
 			turThesaurusProcessor.startup();
 			Map<String, Object> thesaurusResults = turThesaurusProcessor.detectTerms(turSNJobItem.getAttributes());
 
+			logger.debug("thesaurusResults.size(): " + thesaurusResults.size());
 			for (Entry<String, Object> thesaurusResult : thesaurusResults.entrySet()) {
+				logger.debug("thesaurusResult Key: " + thesaurusResult.getKey());
+				logger.debug("thesaurusResult Value: " + thesaurusResult.getValue());
 				consolidateResults.put(thesaurusResult.getKey(), thesaurusResult.getValue());
 			}
 		}
