@@ -12,8 +12,6 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import com.viglet.turing.exchange.sn.TurSNSiteExchange;
-import com.viglet.turing.exchange.sn.TurSNSiteExport;
 import com.viglet.turing.persistence.model.nlp.TurNLPInstance;
 import com.viglet.turing.persistence.model.se.TurSEInstance;
 
@@ -70,22 +68,22 @@ public class TurSNSite implements Serializable {
 	@Column(nullable = true)
 	private int thesaurus;
 
-	@Column(nullable = false)
+	@Column(nullable = true)
 	private String defaultTitleField;
 
-	@Column(nullable = false)
+	@Column(nullable = true)
 	private String defaultTextField;
 
-	@Column(nullable = false)
+	@Column(nullable = true)
 	private String defaultDescriptionField;
 
-	@Column(nullable = false)
+	@Column(nullable = true)
 	private String defaultDateField;
 
-	@Column(nullable = false)
+	@Column(nullable = true)
 	private String defaultImageField;
 
-	@Column(nullable = false)
+	@Column(nullable = true)
 	private String defaultURLField;
 
 	// bi-directional many-to-one association to TurSEInstance
