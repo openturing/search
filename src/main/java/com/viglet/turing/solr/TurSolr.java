@@ -73,6 +73,8 @@ import com.viglet.turing.se.result.TurSEResult;
 import com.viglet.turing.se.result.TurSEResults;
 import com.viglet.turing.se.similar.TurSESimilarResult;
 import com.viglet.turing.sn.TurSNFieldType;
+import com.viglet.turing.sn.tr.TurSNTargetingRuleMethod;
+import com.viglet.turing.sn.tr.TurSNTargetingRules;
 import com.viglet.turing.util.TurSNSiteFieldUtils;
 
 @Component
@@ -89,7 +91,9 @@ public class TurSolr {
 	private TurSNSiteFieldExtRepository turSNSiteFieldExtRepository;
 	@Autowired
 	private TurSolrField turSolrField;
-
+	@Autowired
+	private TurSNTargetingRules turSNTargetingRules;
+	
 	private TurSEInstance currSE = null;
 	private Map<String, Object> attributes = null;
 	private TurSNSite turSNSite = null;
@@ -508,29 +512,9 @@ public class TurSolr {
 		query.setFilterQueries(filterQueryArr);
 
 		// Targeting Rule
-		if (tr != null && tr.size() > 0) {
-			List<String> emptyTargetingRules = new ArrayList<String>();
-			StringBuilder targetingRuleQuery = new StringBuilder();
-			targetingRuleQuery.append("(");
-			String targetingRuleOR = "";
-			for (String trItem : tr) {
-				targetingRuleQuery.append(targetingRuleOR).append(trItem);
-				targetingRuleOR = " OR ";
-				String[] targetingRuleParts = trItem.split(":");
-				if (targetingRuleParts.length == 2 && !emptyTargetingRules.contains(targetingRuleParts[0])) {
-					emptyTargetingRules.add(targetingRuleParts[0]);
-				}
-			}
-			targetingRuleQuery.append(")");
-
-			if (emptyTargetingRules.size() > 0) {
-				for (String emptyTargetRule : emptyTargetingRules) {
-					targetingRuleQuery.append(String.format(" OR (*:* NOT %s:*)", emptyTargetRule));
-				}
-			}
-			// Sample: "(groups:Group1 OR groups:Group2) OR (*:* NOT groups:*)");
-			query.addFilterQuery(targetingRuleQuery.toString());
-		}
+		// TODO: Implement AND or OR choice
+		if (tr != null && tr.size() > 0)
+			query.addFilterQuery(turSNTargetingRules.run(TurSNTargetingRuleMethod.AND, tr));
 
 		// System.out.println("Solr Query:" + query.toString());
 		QueryResponse queryResponse;
