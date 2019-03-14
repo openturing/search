@@ -102,18 +102,24 @@ public class TurSNProcessQueue {
 
 		// SE
 		for (Entry<String, Object> attribute : turSNJobItem.getAttributes().entrySet()) {
-			logger.debug("SE Consolidate Value: " + attribute.getValue());
-			logger.debug("SE Consolidate Class: " + attribute.getValue().getClass().getName());
-			consolidateResults.put(attribute.getKey(), attribute.getValue());
+			if (logger.isDebugEnabled())
+				logger.debug("SE Consolidate Value: " + attribute.getValue());
+			if (attribute.getValue() != null) {
+				if (logger.isDebugEnabled())
+					logger.debug("SE Consolidate Class: " + attribute.getValue().getClass().getName());
+				consolidateResults.put(attribute.getKey(), attribute.getValue());
+			}
 		}
 
 		// NLP
 		boolean nlp = true;
 		if (turSNSite.getTurNLPInstance() != null) {
-			logger.debug("It is using NLP to process attributes");
+			if (logger.isDebugEnabled())
+				logger.debug("It is using NLP to process attributes");
 			nlp = true;
 		} else {
-			logger.debug("It is not using NLP to process attributes");
+			if (logger.isDebugEnabled())
+				logger.debug("It is not using NLP to process attributes");
 			nlp = false;
 		}
 
