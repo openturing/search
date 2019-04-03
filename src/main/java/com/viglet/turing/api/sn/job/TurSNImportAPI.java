@@ -62,7 +62,10 @@ public class TurSNImportAPI {
 	}
 
 	public void send(TurSNJob turSNJob) {
-		logger.debug("Sent job - " + INDEXING_QUEUE);
+		if (logger.isDebugEnabled()) {
+			logger.debug("Sent job - " + INDEXING_QUEUE);
+			logger.debug("turSNJob: " + turSNJob.getTurSNJobItems().toString());
+		}
 		this.jmsMessagingTemplate.convertAndSend(INDEXING_QUEUE, turSNJob);
 
 	}

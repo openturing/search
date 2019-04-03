@@ -47,5 +47,8 @@ public class TurSNJobItem implements Serializable{
 		this.turSNJobAction = turSNJobAction;
 	}
 
+	public String toString() {
+		return String.format("action: %s, attributes %s", this.getTurSNJobAction(), this.getAttributes().toString());
+	}
 
 }

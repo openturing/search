@@ -17,6 +17,7 @@
 
 package com.viglet.turing.api.sn.job;
 
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -48,5 +49,13 @@ public class TurSNJobItems implements Iterable<TurSNJobItem>, Serializable {
 
 	public boolean remove(TurSNJobItem turSNJobItem) {
 		return turSNJobItems.remove(turSNJobItem);
+	}
+	
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		for (TurSNJobItem turSNJobItem : this){
+			sb.append(String.format("turSNJobItem: %s", turSNJobItem.toString()));
+		}
+		return sb.toString();
 	}
 }
