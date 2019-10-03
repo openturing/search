@@ -127,15 +127,18 @@ public class TurSolr {
 		this.currText = currText;
 	}
 
+	public SolrClient getSolrClient(TurSEInstance turSEInstance, String core) {
+		String urlString = "http://" + turSEInstance.getHost() + ":" + turSEInstance.getPort() + "/solr/" + core;
+		return new HttpSolrClient.Builder(urlString).withHttpClient(closeableHttpClient)
+				.withConnectionTimeout(30000).withSocketTimeout(30000).build();
+		
+ 
+	}
 
 	public void init(TurSEInstance turSEInstance) {
 		this.setCurrSE(turSEInstance);	
 		if (turSEInstance != null) {
-			String urlString = "http://" + turSEInstance.getHost() + ":" + turSEInstance.getPort() + "/solr/"
-					+ turSNSite.getCore();
-			solrClient = new HttpSolrClient.Builder(urlString).withHttpClient(closeableHttpClient).withConnectionTimeout(30000)
-					.withSocketTimeout(30000).build();
-
+			solrClient  = this.getSolrClient(turSEInstance, turSNSite.getCore());
 		}
 	}
 
