@@ -69,7 +69,7 @@ import com.viglet.turing.util.TurSNSiteFieldUtils;
 
 @Component
 @Transactional
-public class TurSolr {
+public class TurSolr { 
 	private final int ADD_UNTIL_COMMIT = 50;
 	private static int addUntilCommitCounter;
 	@Autowired
