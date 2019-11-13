@@ -70,13 +70,15 @@ import com.viglet.turing.util.TurSNSiteFieldUtils;
 @Component
 @Transactional
 public class TurSolr { 
+	static final Logger logger = LogManager.getLogger(TurSolr.class.getName());
+	
 	private final int ADD_UNTIL_COMMIT = 50;
 	private static int addUntilCommitCounter;
+	
 	@Autowired
 	private TurSEInstanceRepository turSEInstanceRepository;
 	@Autowired
-	private TurConfigVarRepository turConfigVarRepository;
-	static final Logger logger = LogManager.getLogger(TurSolr.class.getName());
+	private TurConfigVarRepository turConfigVarRepository;	
 	@Autowired
 	private TurSNSiteFieldExtRepository turSNSiteFieldExtRepository;
 	@Autowired
